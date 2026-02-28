@@ -4,7 +4,13 @@ import { X, Layout, FileText, Play } from "lucide-react";
 import "../styles/CodeEditor.css";
 
 const LANGUAGES = ["javascript", "typescript", "python", "java", "cpp", "go", "rust", "css", "html"];
-const FALLBACK_MODELS = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
+const FALLBACK_MODELS = [
+    "gemini-1.5-pro",
+    "gemini-1.5-flash",
+    "gemini-1.5-flash-latest",
+    "gemini-2.0-flash",
+    "gemini-pro"
+];
 
 const SAMPLE_CODE = `function fibonacci(n) {
   if (n <= 1) return n;
@@ -223,8 +229,9 @@ ${code}
                     }
                 );
 
-                if (res.status === 429 && i < FALLBACK_MODELS.length - 1) {
-                    console.warn(`Model ${modelId} rate limited. Falling back...`);
+                // Fallback on Rate Limit (429), Not Found (404), Forbidden (403), or Bad Request (400)
+                if ((res.status === 429 || res.status === 404 || res.status === 403 || res.status === 400) && i < FALLBACK_MODELS.length - 1) {
+                    console.warn(`Model ${modelId} failed (${res.status}). Trying next fallback...`);
                     continue;
                 }
 

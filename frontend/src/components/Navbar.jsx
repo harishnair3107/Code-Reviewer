@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Moon, Sun, Key, Cpu, X, Code } from 'lucide-react';
+import { Moon, Sun, Key, Cpu, X, Code, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useAIKey } from '../context/AIKeyContext';
@@ -27,6 +27,10 @@ const Navbar = () => {
                 <Link to="/editor" className="nav-link">
                     <Code size={20} />
                     <span>Reviewer</span>
+                </Link>
+                <Link to="/docs" className="nav-link">
+                    <BookOpen size={20} />
+                    <span>Docs</span>
                 </Link>
             </div>
 

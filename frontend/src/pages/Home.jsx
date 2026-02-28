@@ -21,7 +21,7 @@ const Home = () => {
                         <button className="cta-primary" onClick={() => { navigate('/editor') }}>
                             Get Started <ArrowRight size={20} />
                         </button>
-                        <button className="cta-secondary">Documentation</button>
+                        <button className="cta-secondary" onClick={() => navigate('/docs')}>Documentation</button>
                     </div>
                 </div>
 
@@ -65,48 +65,48 @@ const Home = () => {
             </section>
 
             <section className="gemini-guide">
-            <div className="guide-header">
-                <h2>Get Your Free <span className="gradient-text">Gemini Key</span></h2>
-                <p>Start reviewing your code with AI in less than 2 minutes.</p>
-            </div>
-
-            <div className="guide-steps">
-                <div className="step-card">
-                    <div className="step-number">1</div>
-                    <h4>Visit AI Studio</h4>
-                    <p>Head over to Google AI Studio, the developer platform for Gemini.</p>
+                <div className="guide-header">
+                    <h2>Get Your Free <span className="gradient-text">Gemini Key</span></h2>
+                    <p>Start reviewing your code with AI in less than 2 minutes.</p>
                 </div>
 
-                <div className="step-card">
-                    <div className="step-number">2</div>
-                    <h4>Sign In</h4>
-                    <p>Log in with your standard Google Account to access the dashboard.</p>
+                <div className="guide-steps">
+                    <div className="step-card">
+                        <div className="step-number">1</div>
+                        <h4>Visit AI Studio</h4>
+                        <p>Head over to Google AI Studio, the developer platform for Gemini.</p>
+                    </div>
+
+                    <div className="step-card">
+                        <div className="step-number">2</div>
+                        <h4>Sign In</h4>
+                        <p>Log in with your standard Google Account to access the dashboard.</p>
+                    </div>
+
+                    <div className="step-card">
+                        <div className="step-number">3</div>
+                        <h4>Generate Key</h4>
+                        <p>Click "Get API Key" and create a new project key in one click.</p>
+                    </div>
+
+                    <div className="step-card">
+                        <div className="step-number">4</div>
+                        <h4>Paste & Run</h4>
+                        <p>Copy your key and paste it into the "API Keys" section in CodeSage.</p>
+                    </div>
                 </div>
 
-                <div className="step-card">
-                    <div className="step-number">3</div>
-                    <h4>Generate Key</h4>
-                    <p>Click "Get API Key" and create a new project key in one click.</p>
+                <div className="guide-cta">
+                    <a
+                        href="https://aistudio.google.com/app/apikey"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="external-link"
+                    >
+                        Get Your Key Now <ExternalLink size={18} />
+                    </a>
                 </div>
-
-                <div className="step-card">
-                    <div className="step-number">4</div>
-                    <h4>Paste & Run</h4>
-                    <p>Copy your key and paste it into the "API Keys" section in CodeSage.</p>
-                </div>
-            </div>
-
-            <div className="guide-cta">
-                <a
-                    href="https://aistudio.google.com/app/apikey"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="external-link"
-                >
-                    Get Your Key Now <ExternalLink size={18} />
-                </a>
-            </div>
-        </section>
+            </section>
         </div>
     );
 };
