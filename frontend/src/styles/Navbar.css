@@ -148,6 +148,7 @@
     border-radius: 6px;
     color: var(--text-primary);
     outline: none;
+    box-sizing: border-box;
 }
 
 .modal-body input:focus {

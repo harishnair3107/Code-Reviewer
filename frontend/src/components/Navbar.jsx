@@ -12,7 +12,7 @@ const Navbar = () => {
     const [tempKey, setTempKey] = useState(apiKey);
 
     const handleSave = () => {
-        saveApiKey(tempKey);
+        saveApiKey(tempKey.trim());
         setIsModalOpen(false);
     };
 

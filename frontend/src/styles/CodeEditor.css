@@ -15,7 +15,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 24px;
-    height: 56px;
+    height: 48px;
     background: var(--card-bg);
     border-bottom: 1px solid var(--border-color);
     flex-shrink: 0;
@@ -111,6 +111,12 @@
     background: var(--border-color);
 }
 
+.btn-ghost.active {
+    color: var(--primary-color);
+    background: rgba(59, 130, 246, 0.1);
+    border-color: var(--primary-color);
+}
+
 .btn-primary {
     background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     color: white;
@@ -135,9 +141,14 @@
 /* Main layout */
 .main-split {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 0fr;
     flex: 1;
     overflow: hidden;
+    transition: grid-template-columns 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.main-split.show-review {
+    grid-template-columns: 1fr 1fr;
 }
 
 /* Editor Side */
@@ -157,6 +168,25 @@
     background: var(--card-bg);
     border-bottom: 1px solid var(--border-color);
     flex-shrink: 0;
+}
+
+.close-panel-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.close-panel-btn:hover {
+    background: var(--border-color);
+    color: var(--text-primary);
 }
 
 .panel-title {
@@ -257,6 +287,14 @@
     flex-direction: column;
     overflow: hidden;
     background: var(--bg-color);
+    border-left: 1px solid var(--border-color);
+    min-width: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.review-panel.collapsed {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .review-body {

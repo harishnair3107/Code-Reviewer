@@ -21,3 +21,4 @@ Text Secondary	Medium Gray	#6B7280
 Border	Light Gray	#E5E7EB
 Success	Emerald	#10B981
 Error	Rose	#F43F5E
+

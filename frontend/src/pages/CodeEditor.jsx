@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useAIKey } from "../context/AIKeyContext";
+import { X, Layout, FileText, Play } from "lucide-react";
 import "../styles/CodeEditor.css";
 
 const LANGUAGES = ["javascript", "typescript", "python", "java", "cpp", "go", "rust", "css", "html"];
+const FALLBACK_MODELS = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
 
 const SAMPLE_CODE = `function fibonacci(n) {
   if (n <= 1) return n;
@@ -118,7 +120,7 @@ function ReviewPanel({ review, loading, error }) {
     return (
         <div className="review-content">
             {sections.map((section, i) => (
-                <div key={i} className={`review-section \${section.type}`} style={{ animationDelay: `\${i * 0.08}s` }}>
+                <div key={i} className={`review-section ${section.type}`} style={{ animationDelay: `${i * 0.08}s` }}>
                     {section.icon && <span className="section-icon">{section.icon}</span>}
                     <div className="section-body">
                         {section.title && <h4 className="section-title">{section.title}</h4>}
@@ -136,6 +138,7 @@ const CodeEditor = () => {
     const [language, setLanguage] = useState("javascript");
     const [review, setReview] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [showReview, setShowReview] = useState(false);
     const [error, setError] = useState(null);
     const [lineCount, setLineCount] = useState(0);
     const textareaRef = useRef(null);
@@ -172,19 +175,22 @@ const CodeEditor = () => {
         }
 
         setLoading(true);
+        setShowReview(true);
         setError(null);
         setReview(null);
 
-        try {
-            const res = await fetch(
-                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=\${apiKey}`,
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: `You are an expert code reviewer. Review the following \${language} code thoroughly. Structure your review with these sections using markdown headers (##):
+        for (let i = 0; i < FALLBACK_MODELS.length; i++) {
+            const modelId = FALLBACK_MODELS[i];
+            try {
+                const res = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: `You are an expert code reviewer. Review the following ${language} code thoroughly. Structure your review with these sections using markdown headers (##):
 
 ## Summary
 Brief overview of what the code does and overall quality.
@@ -206,31 +212,39 @@ Security concerns if applicable.
 
 Keep your response focused and actionable. Use inline code backticks for code references.
 
-\\\`\\\`\\\`\${language}
-\${code}
-\\\`\\\`\\\`
+\`\`\`${language}
+${code}
+\`\`\`
 `
-                            }]
-                        }],
-                        generationConfig: { temperature: 0.3, maxOutputTokens: 2048 }
-                    })
+                                }]
+                            }],
+                            generationConfig: { temperature: 0.3, maxOutputTokens: 2048 }
+                        })
+                    }
+                );
+
+                if (res.status === 429 && i < FALLBACK_MODELS.length - 1) {
+                    console.warn(`Model ${modelId} rate limited. Falling back...`);
+                    continue;
                 }
-            );
 
-            if (!res.ok) {
-                const errData = await res.json();
-                throw new Error(errData.error?.message || `API Error: \${res.status}`);
+                if (!res.ok) {
+                    const errData = await res.json();
+                    throw new Error(errData.error?.message || `API Error: ${res.status}`);
+                }
+
+                const data = await res.json();
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (!text) throw new Error("No response from Gemini");
+                setReview(text);
+                return; // Success!
+            } catch (err) {
+                if (i === FALLBACK_MODELS.length - 1) {
+                    setError(err.message);
+                }
             }
-
-            const data = await res.json();
-            const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (!text) throw new Error("No response from Gemini");
-            setReview(text);
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
         }
+        setLoading(false);
     };
 
     const clearCode = () => { setCode(''); setReview(null); setError(null); };
@@ -239,7 +253,7 @@ Keep your response focused and actionable. Use inline code backticks for code re
     return (
         <div className="code-editor-container">
             {/* Split view */}
-            <div className="main-split">
+            <div className={`main-split ${showReview ? 'show-review' : ''}`}>
                 {/* Editor */}
                 <div className="editor-side-panel">
                     <div className="panel-header">
@@ -248,6 +262,14 @@ Keep your response focused and actionable. Use inline code backticks for code re
                             Editor
                         </div>
                         <div className="header-right">
+                            <button
+                                className={`btn btn-ghost ${showReview ? 'active' : ''}`}
+                                onClick={() => setShowReview(!showReview)}
+                                title="Toggle Review Panel"
+                            >
+                                <Layout size={16} />
+                                <span>Panel</span>
+                            </button>
                             <select
                                 className="lang-select"
                                 value={language}
@@ -310,7 +332,7 @@ Keep your response focused and actionable. Use inline code backticks for code re
                             autoComplete="off"
                             autoCorrect="off"
                             autoCapitalize="off"
-                            placeholder={`// Write your \${language} code here...`}
+                            placeholder={`// Write your ${language} code here...`}
                         />
                     </div>
                     <div className="status-bar">
@@ -321,17 +343,22 @@ Keep your response focused and actionable. Use inline code backticks for code re
                 </div>
 
                 {/* Review */}
-                <div className="review-panel">
+                <div className={`review-panel ${!showReview ? 'collapsed' : ''}`}>
                     <div className="panel-header">
                         <div className="panel-title">
                             <div className="panel-title-dot" style={{ background: 'var(--accent-color)', boxShadow: '0 0 6px var(--accent-color)' }} />
                             Gemini Review
                         </div>
-                        {review && (
-                            <button className="btn btn-ghost" onClick={reviewCode} style={{ padding: '4px 10px', fontSize: '0.72rem' }}>
-                                Re-analyze
+                        <div className="header-right">
+                            {review && !loading && (
+                                <button className="btn btn-ghost" onClick={reviewCode} style={{ padding: '4px 10px', fontSize: '0.72rem' }}>
+                                    Re-analyze
+                                </button>
+                            )}
+                            <button className="close-panel-btn" onClick={() => setShowReview(false)}>
+                                <X size={18} />
                             </button>
-                        )}
+                        </div>
                     </div>
                     <div className="review-body">
                         <ReviewPanel review={review} loading={loading} error={error} />

@@ -6,8 +6,9 @@ export const AIKeyProvider = ({ children }) => {
     const [apiKey, setApiKey] = useState(localStorage.getItem('ai_key') || '');
 
     const saveApiKey = (key) => {
-        setApiKey(key);
-        localStorage.setItem('ai_key', key);
+        const trimmedKey = key.trim();
+        setApiKey(trimmedKey);
+        localStorage.setItem('ai_key', trimmedKey);
     };
 
     return (
