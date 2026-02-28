@@ -1,0 +1,23 @@
+@Dark theme:
+Purpose	Color	Hex
+Background	Deep Navy	#0F172A
+Card Background	Dark Slate	#1E293B
+Primary	Electric Blue	#3B82F6
+Accent	Neon Purple	#8B5CF6
+Text Primary	Light Gray	#F1F5F9
+Text Secondary	Slate Gray	#94A3B8
+Border	Soft Slate	#334155
+Success	Green	#22C55E
+Error	Red	#EF4444
+ 
+@Light Theme:
+Purpose	Color	Hex
+Background	Soft White	#F8FAFC
+Card Background	Pure White	#FFFFFF
+Primary (Buttons)	Indigo	#4F46E5
+Secondary	Sky Blue	#0EA5E9
+Text Primary	Dark Gray	#111827
+Text Secondary	Medium Gray	#6B7280
+Border	Light Gray	#E5E7EB
+Success	Emerald	#10B981
+Error	Rose	#F43F5E
