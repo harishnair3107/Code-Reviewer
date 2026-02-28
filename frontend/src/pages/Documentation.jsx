@@ -27,9 +27,6 @@ const Documentation = () => {
         return () => observer.disconnect();
     }, []);
 
-    const sections = [
-        // ... (sections content remains the same)
-    ];
 
     // Note: I need to redefine the sections because I'm using activeSection state
     // To keep it simple, I'll just keep the sections array outside if possible or redefine it

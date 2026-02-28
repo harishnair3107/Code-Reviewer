@@ -5,8 +5,8 @@ import "../styles/CodeEditor.css";
 
 const LANGUAGES = ["javascript", "typescript", "python", "java", "cpp", "go", "rust", "css", "html"];
 const FALLBACK_MODELS = [
-    "gemini-1.5-pro",
     "gemini-1.5-flash",
+    "gemini-1.5-pro",
     "gemini-1.5-flash-latest",
     "gemini-2.0-flash",
     "gemini-pro"
